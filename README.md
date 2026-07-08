@@ -29,8 +29,8 @@ A movie search and watchlist app built with React. Search movies via the OMDB AP
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/usepopcorn.git
-cd usepopcorn
+git clone https://github.com/Abdullah-Mohammed456/usepopcorn.git
+cd usePopcorn
 ```
 
 ### 2. Install dependencies
@@ -63,12 +63,12 @@ Open the URL shown in the terminal (usually `http://localhost:5173`).
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
+| Command           | Description                      |
+| ----------------- | -------------------------------- |
+| `npm run dev`     | Start development server         |
+| `npm run build`   | Build for production             |
 | `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint |
+| `npm run lint`    | Run ESLint                       |
 
 ## Project Structure
 
@@ -92,9 +92,9 @@ src/
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_OMDB_API_KEY` | Your OMDB API key | Yes |
+| Variable            | Description       | Required |
+| ------------------- | ----------------- | -------- |
+| `VITE_OMDB_API_KEY` | Your OMDB API key | Yes      |
 
 See `.env.example` for the template.
 
