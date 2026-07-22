@@ -1,8 +1,8 @@
 // components/SeriesEpisodes.jsx
 import { useState, useEffect } from "react";
-import { KEY } from "../constants";
-import { Loading } from "./Loading";
-import { ErrorMessage } from "./ErrorMessage";
+import { KEY } from "../../constants";
+import { Loading } from "../ui/Loading";
+import { ErrorMessage } from "../ui/ErrorMessage";
 
 export function SeriesEpisodes({ imdbID, totalSeasons }) {
   const [seasons, setSeasons] = useState([]);

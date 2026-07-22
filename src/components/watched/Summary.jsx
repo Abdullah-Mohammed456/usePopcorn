@@ -1,4 +1,4 @@
-import { average } from "../utils/helpers";
+import { average } from "../../utils/helpers";
 
 export function Summary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));

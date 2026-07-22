@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { KEY } from "../constants";
-import { Loading } from "./Loading";
-import StarRating from "./StarRating";
+import { KEY } from "../../constants";
+import { Loading } from "../ui/Loading";
+import StarRating from "../ui/StarRating";
 import { SeriesEpisodes } from "./SeriesEpisodes";
+import { useKey } from "../../hooks/useKey";
 
 export function MovieDetails({
   selectedId,
@@ -14,19 +15,34 @@ export function MovieDetails({
   const [userRating, setUserRating] = useState("");
   const [loading, setLoading] = useState(false);
 
+  function handleAddToList() {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating,
+    };
+
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  }
+
   const {
     Title: title,
     Year: year,
     Poster: poster,
     Runtime: runtime,
     Plot: plot,
-    Released: released, // fixed casing
+    Released: released,
     Actors: actors,
     Director: director,
     Genre: genre,
     imdbRating: imdbRating,
-    Type: type, // "movie" | "series"
-    totalSeasons, // only present for series
+    Type: type,
+    totalSeasons,
   } = movie;
 
   useEffect(
@@ -49,6 +65,8 @@ export function MovieDetails({
     [selectedId],
   );
 
+  useKey("escape", onCloseMovie);
+
   useEffect(
     function () {
       if (!title) return;
@@ -61,35 +79,6 @@ export function MovieDetails({
     },
     [title],
   );
-
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape") onCloseMovie();
-      }
-
-      document.addEventListener("keydown", callback);
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie],
-  );
-
-  function handleAddToList() {
-    const newWatchedMovie = {
-      imdbID: selectedId,
-      title,
-      year,
-      poster,
-      imdbRating: Number(imdbRating),
-      runtime: Number(runtime.split(" ").at(0)),
-      userRating,
-    };
-
-    onAddWatched(newWatchedMovie);
-    onCloseMovie();
-  }
 
   return (
     <div className="details">
