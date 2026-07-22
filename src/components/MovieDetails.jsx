@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { KEY } from "../constants";
 import { Loading } from "./Loading";
 import StarRating from "./StarRating";
+import { SeriesEpisodes } from "./SeriesEpisodes";
 
 export function MovieDetails({
   selectedId,
@@ -19,11 +20,13 @@ export function MovieDetails({
     Poster: poster,
     Runtime: runtime,
     Plot: plot,
-    released,
+    Released: released, // fixed casing
     Actors: actors,
     Director: director,
     Genre: genre,
     imdbRating: imdbRating,
+    Type: type, // "movie" | "series"
+    totalSeasons, // only present for series
   } = movie;
 
   useEffect(
@@ -133,6 +136,10 @@ export function MovieDetails({
             </p>
             <p>Starring {actors}</p>
             <p>Directed By {director}</p>
+
+            {type === "series" && (
+              <SeriesEpisodes imdbID={selectedId} totalSeasons={totalSeasons} />
+            )}
           </section>
         </>
       )}
