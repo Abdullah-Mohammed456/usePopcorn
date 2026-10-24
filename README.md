@@ -7,7 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
 [![Deploy: Vercel](https://img.shields.io/badge/deploy-Vercel-black?logo=vercel)](#deployment)
 
-**Live demo:** [Add the Vercel URL after deployment](#deployment)
+**Live demo:** (https://usepoopcorn.vercel.app)
 
 <!-- Screenshots: add current captures under docs/screenshots after deploying. -->
 
