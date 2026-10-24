@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f1eee5" />
+    <title>Film Index — usePopcorn preview</title>
+    <style>
+      :root { color-scheme: light; --paper: #f1eee5; --ink: #24231f; --muted: #727067; --rule: #cbc7bc; --red: #a5392b; --olive: #646b4e; font-family: Arial, sans-serif; }
+      * { box-sizing: border-box; } body { margin: 0; background: var(--paper); color: var(--ink); }
+      a { color: inherit; } .wrap { width: min(1180px, calc(100% - 56px)); margin: auto; }
+      header { display: flex; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--ink); gap: 28px; }
+      .brand { text-decoration: none; font: 700 1.2rem Georgia, serif; letter-spacing: -.05em; } nav { display: flex; gap: 21px; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; } nav a { text-decoration: none; }
+      .search { margin-left: auto; width: min(300px, 35vw); display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #8d897e; padding: 8px 0; color: var(--muted); } .search input { border: 0; outline: 0; background: transparent; width: 100%; color: var(--ink); font: 1rem Georgia, serif; }
+      .masthead { padding: 54px 0 35px; display: grid; grid-template-columns: 1fr 240px; align-items: end; gap: 30px; border-bottom: 1px solid var(--ink); }
+      .kicker { color: var(--red); font-size: .7rem; text-transform: uppercase; letter-spacing: .19em; }
+      h1 { margin: 12px 0 0; font: 500 clamp(3.2rem, 8vw, 7.5rem)/.82 Georgia, serif; letter-spacing: -.08em; }
+      .masthead aside { color: var(--muted); font: 1rem/1.5 Georgia, serif; }
+      .controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+      .controls span { margin-right: auto; color: var(--muted); font-size: .8rem; }
+      .controls button { border: 1px solid var(--rule); padding: 8px 12px; border-radius: 0; background: transparent; color: var(--ink); font-size: .76rem; cursor: pointer; }
+      .controls button:first-of-type { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+      .layout { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 48px; padding: 26px 0 70px; }
+      .section-title { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; } h2 { margin: 0; font: 500 1.7rem Georgia, serif; } .section-title small { color: var(--muted); }
+      .film-list { border-top: 1px solid var(--ink); }
+      .film { display: grid; grid-template-columns: 42px 70px minmax(0,1fr) 70px; gap: 14px; align-items: center; min-height: 104px; border-bottom: 1px solid var(--rule); }
+      .number { color: var(--muted); font: italic 1.1rem Georgia, serif; }
+      .cover { height: 78px; position: relative; overflow: hidden; background: linear-gradient(145deg,#c4b8a4,#4f584d); }
+      .film:nth-child(2) .cover { background: linear-gradient(145deg,#dfaa78,#8d4d36); } .film:nth-child(3) .cover { background: linear-gradient(145deg,#abb8c7,#5e6272); } .film:nth-child(4) .cover { background: linear-gradient(145deg,#d1b9b8,#754d55); }
+      .cover::after { content: ''; position: absolute; width: 34px; height: 56px; bottom: -4px; left: 26px; border-radius: 50% 50% 0 0; background: #17171566; }
+      .title { font: 1.18rem Georgia, serif; } .meta { margin-top: 5px; color: var(--muted); font-size: .78rem; }
+      .rating { color: var(--olive); font: 1rem Georgia, serif; text-align: right; }
+      aside.collection { border-left: 1px solid var(--rule); padding-left: 24px; }
+      .collection h3 { margin: 0 0 14px; font: 500 1.4rem Georgia, serif; }
+      .collection p { color: var(--muted); font: .94rem/1.55 Georgia, serif; }
+      .saved { margin: 22px 0; padding: 16px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+      .saved strong { display: block; font: 500 2rem Georgia, serif; } .saved span { color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .12em; }
+      .collection a { color: var(--red); font-size: .83rem; text-underline-offset: 4px; }
+      .foot { padding: 20px 0 28px; border-top: 1px solid var(--ink); color: var(--muted); font-size: .78rem; }
+      :focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+      @media (max-width: 760px) { .wrap { width: calc(100% - 30px); } nav { display: none; } .masthead { grid-template-columns: 1fr; } .masthead aside { max-width: 420px; } .layout { grid-template-columns: 1fr; gap: 32px; } aside.collection { border-left: 0; border-top: 1px solid var(--ink); padding: 20px 0 0; } }
+      @media (max-width: 440px) { .film { grid-template-columns: 25px 54px minmax(0,1fr) 45px; gap: 9px; } .cover { height: 68px; } .controls span { width: 100%; } }
+      @media (prefers-reduced-motion: no-preference) { .film { transition: background 160ms ease; } .film:hover { background: #e6e1d5; } }
+    </style>
+  </head>
+  <body>
+    <header class="wrap"><a class="brand" href="index.html">usePopcorn / index</a><nav aria-label="Main navigation"><a href="#catalog">Catalog</a><a href="#watchlist">Watchlist</a><a href="#about">About</a></nav><label class="search">⌕ <input aria-label="Search movies" placeholder="Search the index" /></label></header>
+    <main class="wrap">
+      <section class="masthead"><div><div class="kicker">The moving image · No. 01</div><h1>Find a film.<br />Keep a record.</h1></div><aside>A thoughtful index for what you want to watch, what you’ve seen, and what deserves another look.</aside></section>
+      <section class="controls" aria-label="Film filters"><span>Showing 248 titles · Sorted for discovery</span><button>All films</button><button>Popular</button><button>Drama</button><button>Recently added</button></section>
+      <div class="layout" id="catalog"><section><div class="section-title"><h2>Selected films</h2><small>01—04 / 248</small></div><div class="film-list">
+        <article class="film"><span class="number">01</span><div class="cover" aria-label="Film artwork placeholder"></div><div><div class="title">The Grand Budapest Hotel</div><div class="meta">2014 · Comedy, Adventure · Wes Anderson</div></div><span class="rating">★★★★½</span></article>
+        <article class="film"><span class="number">02</span><div class="cover" aria-label="Film artwork placeholder"></div><div><div class="title">In the Mood for Love</div><div class="meta">2000 · Romance, Drama · Wong Kar-wai</div></div><span class="rating">★★★★★</span></article>
+        <article class="film"><span class="number">03</span><div class="cover" aria-label="Film artwork placeholder"></div><div><div class="title">The Truman Show</div><div class="meta">1998 · Drama, Sci-fi · Peter Weir</div></div><span class="rating">★★★★☆</span></article>
+        <article class="film"><span class="number">04</span><div class="cover" aria-label="Film artwork placeholder"></div><div><div class="title">Perfect Days</div><div class="meta">2023 · Drama · Wim Wenders</div></div><span class="rating">★★★★½</span></article>
+      </div></section><aside class="collection" id="watchlist"><div class="kicker">Your collection</div><h3>A small archive of your own.</h3><p>Search, rate, and save films. Your watched list stays with you, ready whenever you need a recommendation.</p><div class="saved"><strong>12 films</strong><span>In your watchlist</span></div><a href="#">Open your list ↗</a></aside></div>
+      <footer class="foot" id="about">Direction 02 · Film Index · Catalog clarity references <a href="https://www.criterion.com/" target="_blank" rel="noreferrer">Criterion</a>; sorting, ratings, and watchlist patterns reference <a href="https://help.imdb.com/article/imdb/track-movies-tv/watchlist-faq/G9PA556494DM8YBA" target="_blank" rel="noreferrer">IMDb</a>. Artwork blocks are placeholders. <a href="index.html">Back to directions</a></footer>
+    </main>
+  </body>
+</html>

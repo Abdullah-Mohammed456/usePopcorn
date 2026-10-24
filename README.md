@@ -1,119 +1,161 @@
 # usePopcorn
 
-A movie search and watchlist app built with React. Search movies via the OMDB API, view details, rate them with a star component, and track what you've watched.
+**Find a film, explore the details, rate what you watch, and keep your own collection.**
+
+[![Build](https://img.shields.io/github/actions/workflow/status/Abdullah-Mohammed456/usePopcorn/ci.yml?label=build)](https://github.com/Abdullah-Mohammed456/usePopcorn/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
+[![Deploy: Vercel](https://img.shields.io/badge/deploy-Vercel-black?logo=vercel)](#deployment)
+
+**Live demo:** [Add the Vercel URL after deployment](#deployment)
+
+<!-- Screenshots: add current captures under docs/screenshots after deploying. -->
+
+| Discover | My films |
+| --- | --- |
+| _Screenshot placeholder — capture the Discover page here._ | _Screenshot placeholder — capture the collection page here._ |
 
 ## Features
 
-- Search movies by title (OMDB API)
-- View movie details (plot, cast, rating, runtime)
-- Rate movies with a custom star rating component
-- Build and manage a personal watched list
-- Summary stats for your watched movies (average ratings, total runtime)
-- Collapsible UI panels and keyboard support (Escape to close details)
+- Search movies and series through the OMDb API.
+- Open a title to see its plot, cast, director, rating, and series episodes.
+- Give a title a personal rating and save it to the local collection.
+- Review collection statistics and remove saved titles.
+- Browse results in responsive poster rails with keyboard-accessible details.
+- Keep the collection in browser local storage; no account or database is required.
+- Keep the OMDb key on the API server, outside the browser bundle.
 
-## Tech Stack
+## Tech stack
 
-- **React 19** — UI library
-- **Vite** — build tool and dev server
-- **OMDB API** — movie data
-- **CSS** — custom styling (no UI framework)
+- React 19, TypeScript in strict mode, and Vite 8
+- Express 5, Helmet, CORS, express-rate-limit, and Zod
+- OMDb API for movie and series data
+- GSAP with ScrollTrigger, dynamically imported for optional scroll motion
+- Anton for display headings; system fonts for body text
 
-## Prerequisites
+The interface follows a dark, streaming-catalog direction with a red accent and movie poster shelves. Motion is removed when `prefers-reduced-motion` is enabled. Three.js is not included because a 3D scene does not support this app’s search and collection tasks.
 
-- [Node.js](https://nodejs.org/) 18 or later
-- [npm](https://www.npmjs.com/) (comes with Node)
-- A free [OMDB API key](https://www.omdbapi.com/apikey.aspx)
+## Architecture
 
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Abdullah-Mohammed456/usepopcorn.git
-cd usePopcorn
+```mermaid
+flowchart LR
+  Browser["React app"] -->|"Validated API requests"| Server["Express API"]
+  Server -->|"Movie data"| OMDb["OMDb API"]
+  Browser -->|"Saved titles"| Storage["Browser local storage"]
 ```
 
-### 2. Install dependencies
+The browser calls the Express API for OMDb data. The API validates request parameters, adds the server-side API key, and returns provider responses. The collection is stored locally in the browser. The project has no database.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 24 or Node.js 22.13 and later in the 22.x line
+- npm
+- An OMDb API key for movie search
+
+### Install and run
 
 ```bash
 npm install
-```
-
-### 3. Set up environment variables
-
-```bash
 cp .env.example .env
 ```
 
-Open `.env` and add your OMDB API key:
-
-```env
-VITE_OMDB_API_KEY=your_actual_api_key_here
-```
-
-> **Note:** Never commit `.env`. It is listed in `.gitignore`.
-
-### 4. Run the development server
+Put your OMDb key in `.env` as `OMDB_API_KEY`. The key must not use a `VITE_` prefix. Then start both the web app and API:
 
 ```bash
 npm run dev
 ```
 
-Open the URL shown in the terminal (usually `http://localhost:5173`).
+Vite serves the app at `http://localhost:5173`; the Express API listens on `http://localhost:3000` and is reached through the Vite proxy.
 
-## Available Scripts
+### Environment variables
 
-| Command           | Description                      |
-| ----------------- | -------------------------------- |
-| `npm run dev`     | Start development server         |
-| `npm run build`   | Build for production             |
-| `npm run preview` | Preview production build locally |
-| `npm run lint`    | Run ESLint                       |
+| Variable | Required | Used by | Description |
+| --- | --- | --- | --- |
+| `OMDB_API_KEY` | Yes | Express | Server-only credential for OMDb requests |
+| `CORS_ORIGINS` | Yes in production | Express | Comma-separated list of exact allowed frontend origins |
+| `VITE_API_BASE_URL` | Production | Vite app | Render API origin, with no trailing slash; leave blank locally |
+| `VITE_SITE_URL` | Yes for canonical and Open Graph URLs | Vite app | Public site origin, such as `https://your-site.vercel.app` |
 
-## Project Structure
+`.env.example` contains placeholders only. Do not commit `.env` or put server secrets in `VITE_*` variables.
 
-```
-src/
-├── main.jsx              # App entry point
-├── App.jsx               # Root component (state & API logic)
-├── index.css             # Global styles
-├── constants.js          # Environment-based config
-├── components/           # UI components
-│   ├── NavBar.jsx
-│   ├── SearchBar.jsx
-│   ├── MovieList.jsx
-│   ├── MovieDetails.jsx
-│   ├── WatchedMovies.jsx
-│   ├── StarRating.jsx
-│   └── ...
-└── utils/
-    └── helpers.js        # Shared utility functions
-```
+### Commands
 
-## Environment Variables
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start Vite and the Express API together |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | Type-check the frontend and API |
+| `npm run format` | Format supported repository files with Prettier |
+| `npm run build` | Type-check and build the frontend and API |
+| `npm start` | Start the compiled Express API |
 
-| Variable            | Description       | Required |
-| ------------------- | ----------------- | -------- |
-| `VITE_OMDB_API_KEY` | Your OMDB API key | Yes      |
-
-See `.env.example` for the template.
+There is no automated test suite configured yet.
 
 ## Deployment
 
-Build the app:
+The frontend deploys to Vercel and the Express API deploys to Render. Configure the backend first, then point the frontend at it.
 
-```bash
-npm run build
+### Render API
+
+1. Create a Render web service from this repository or use the included Blueprint file [`render.yaml`](render.yaml).
+2. Use `npm install --include=dev && npm run build:server` as the build command and `npm start` as the start command.
+3. Set `OMDB_API_KEY` to your OMDb key and `CORS_ORIGINS` to the exact Vercel site origin. Keep `sync: false` values in the Render dashboard.
+4. Confirm the health check at `/health` returns `{ "status": "ok" }`.
+
+Render supplies `PORT`; the API binds to `process.env.PORT`.
+
+### Vercel frontend
+
+1. Import the GitHub repository into Vercel and choose the Vite framework preset.
+2. Set the build command to `npm run build`, install command to `npm install --include=dev --no-audit --no-fund`, and output directory to `dist` (also set in [`vercel.json`](vercel.json)).
+3. Add `VITE_API_BASE_URL` with the Render service origin and `VITE_SITE_URL` with the public Vercel origin.
+4. Add the final Vercel origin to Render’s `CORS_ORIGINS` and redeploy the API.
+
+### Deployment values
+
+| Service | Variable | Value |
+| --- | --- | --- |
+| Vercel | `VITE_API_BASE_URL` | Render API URL, for example `https://usepopcorn-api.onrender.com` |
+| Vercel | `VITE_SITE_URL` | Public Vercel site URL |
+| Render | `OMDB_API_KEY` | Your OMDb key, set privately in the dashboard |
+| Render | `CORS_ORIGINS` | Comma-separated Vercel production and preview origins you intend to allow |
+
+No Neon database or migrations are needed. The list is kept in browser local storage.
+
+## Project structure
+
+```text
+src/
+  api/                 Browser API adapter
+  components/          Navigation, movie, rating, and collection UI
+  hooks/               Search and local-storage state
+  types/               OMDb and collection types
+  App.tsx              Application state and page composition
+  index.css            Responsive visual system
+server/
+  app.ts                Validated, rate-limited Express API
+  index.ts              Production server entry point
+design-previews/        Isolated design direction previews
+public/                 Favicon and social preview artwork
 ```
 
-The output goes to the `dist/` folder. Deploy that folder to any static host (Vercel, Netlify, GitHub Pages, etc.).
+## Roadmap
 
-Set `VITE_OMDB_API_KEY` in your hosting provider's environment variables dashboard.
+- Add automated tests for search validation, ratings, and collection persistence.
+- Add pagination for large search results.
+- Add optional import/export for the local collection.
+- Capture current desktop and mobile screenshots for this README.
 
-## Learning
+## Contributing
 
-This project is part of **The Ultimate React Course** — focused on React fundamentals, component composition, state, effects, and API integration.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and change guidelines. Before opening a pull request, run `npm run lint`, `npm run typecheck`, and `npm run build`.
 
 ## License
 
-This project is open source and available for learning purposes.
+Released under the [MIT License](LICENSE).
+
+## Contact
+
+Maintainer: [Abdullah Mohammed](https://github.com/Abdullah-Mohammed456)

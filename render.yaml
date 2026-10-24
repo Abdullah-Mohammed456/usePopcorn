@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: usepopcorn-api
+    runtime: node
+    plan: free
+    buildCommand: npm install --include=dev && npm run build:server
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OMDB_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

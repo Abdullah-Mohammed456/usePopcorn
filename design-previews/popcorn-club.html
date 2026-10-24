@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5efdf" />
+    <title>Popcorn Club — usePopcorn preview</title>
+    <style>
+      :root { color-scheme: light; --cream: #f5efdf; --ink: #20263a; --blue: #334dce; --red: #ed6548; --yellow: #f1c64e; --mint: #9ed9c9; --muted: #616475; font-family: "Trebuchet MS", Arial, sans-serif; }
+      * { box-sizing: border-box; } body { margin: 0; color: var(--ink); background: var(--cream); }
+      a { color: inherit; } .wrap { width: min(1180px, calc(100% - 42px)); margin: auto; }
+      header { display: flex; align-items: center; padding: 22px 0; gap: 28px; }
+      .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 900; font-size: 1.2rem; text-decoration: none; letter-spacing: -.06em; }
+      .logo { width: 30px; height: 30px; border-radius: 9px 9px 13px 13px; display: grid; place-items: center; background: var(--yellow); transform: rotate(-7deg); }
+      nav { display: flex; gap: 20px; font-size: .83rem; font-weight: 700; } nav a { text-decoration: none; } nav a:first-child { color: var(--blue); }
+      .search { display: flex; gap: 8px; margin-left: auto; width: min(300px, 34vw); padding: 10px 13px; border: 2px solid #d4cebe; border-radius: 12px; background: #fffaf0; color: var(--muted); }
+      .search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); }
+      .hero { display: grid; grid-template-columns: 1fr .92fr; gap: 46px; align-items: center; padding: 42px 0 56px; }
+      .sticker { display: inline-block; padding: 7px 11px; border-radius: 999px; background: var(--mint); color: #173c36; font-size: .72rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; transform: rotate(-2deg); }
+      h1 { max-width: 610px; margin: 18px 0 16px; font: 900 clamp(3.5rem, 8vw, 7rem)/.83 "Arial Rounded MT Bold", "Trebuchet MS", sans-serif; letter-spacing: -.09em; }
+      h1 em { color: var(--blue); font-style: normal; } .hero p { max-width: 440px; color: var(--muted); font-size: 1.03rem; line-height: 1.6; }
+      .cta { display: inline-block; margin-top: 14px; padding: 14px 19px; border: 0; border-radius: 12px; background: var(--blue); color: white; font-weight: 900; text-decoration: none; box-shadow: 0 5px 0 #20349a; }
+      .ticket { position: relative; min-height: 300px; display: grid; grid-template-columns: 1fr auto; align-items: end; padding: 25px; border-radius: 18px; background: var(--red); overflow: hidden; box-shadow: 12px 12px 0 var(--yellow); }
+      .ticket::before { content: '★'; position: absolute; top: 8px; right: 16px; color: #ffb29f; font-size: 10rem; line-height: 1; transform: rotate(12deg); }
+      .ticket::after { content: 'TONIGHT\A DOUBLE FEATURE'; white-space: pre; position: absolute; top: 23px; left: 22px; padding: 8px; border: 1px dashed #ffe3d8; color: #ffe3d8; font-size: .66rem; font-weight: 900; letter-spacing: .12em; line-height: 1.5; }
+      .ticket strong { z-index: 1; max-width: 260px; color: #fff2da; font: 900 2.9rem/.92 Georgia, serif; } .ticket span { z-index: 1; padding: 9px; border-radius: 50%; background: var(--yellow); font-size: .82rem; font-weight: 900; }
+      .section-head { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; } h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.04em; } .section-head a { color: var(--blue); font-weight: 800; font-size: .83rem; text-decoration: none; }
+      .cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; padding-bottom: 56px; }
+      .card { padding: 10px; border: 2px solid #e3dccb; border-radius: 15px; background: #fffaf0; transform: rotate(-1deg); } .card:nth-child(even) { transform: rotate(1deg); }
+      .cover { height: 190px; display: flex; align-items: end; padding: 11px; border-radius: 9px; color: white; font: 700 1.1rem Georgia, serif; background: linear-gradient(145deg,#9bb7a5,#375c55 58%,#1f3235); text-shadow: 0 2px 5px #0008; }
+      .card:nth-child(2) .cover { background: linear-gradient(145deg,#ffca74,#a64934 58%,#381e27); } .card:nth-child(3) .cover { background: linear-gradient(145deg,#b6c7df,#454d75 60%,#272a3d); } .card:nth-child(4) .cover { background: linear-gradient(145deg,#dec0c1,#914f59 58%,#382630); }
+      .card footer { display: flex; justify-content: space-between; align-items: center; padding: 10px 2px 1px; } .card small { color: var(--muted); } .stars { color: var(--blue); letter-spacing: -.08em; }
+      .bottom { margin-bottom: 24px; padding: 18px 20px; border-radius: 14px; background: var(--mint); display: flex; justify-content: space-between; gap: 18px; align-items: center; } .bottom p { margin: 5px 0 0; color: #385a54; font-size: .85rem; } .bottom strong { font-size: 1.2rem; }
+      :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+      @media (max-width: 760px) { .wrap { width: calc(100% - 28px); } nav { display: none; } .hero { grid-template-columns: 1fr; padding-top: 26px; gap: 30px; } .ticket { min-height: 230px; } .cards { grid-template-columns: repeat(2, 1fr); } .cover { height: 150px; } .bottom { align-items: flex-start; flex-direction: column; } }
+      @media (max-width: 420px) { .search { width: 48%; } .cards { gap: 9px; } .cover { height: 125px; } }
+      @media (prefers-reduced-motion: no-preference) { .card { transition: transform 160ms ease; } .card:hover { transform: translateY(-4px) rotate(0); } .cta { transition: transform 150ms ease, box-shadow 150ms ease; } .cta:hover { transform: translateY(2px); box-shadow: 0 3px 0 #20349a; } }
+    </style>
+  </head>
+  <body>
+    <header class="wrap"><a class="brand" href="index.html"><span class="logo" aria-hidden="true">▶</span>usePopcorn</a><nav aria-label="Main navigation"><a href="#films">Discover</a><a href="#saved">My films</a><a href="#saved">Watchlist</a></nav><label class="search">⌕ <input aria-label="Search movies" placeholder="What are we watching?" /></label></header>
+    <main class="wrap">
+      <section class="hero"><div><span class="sticker">Your movie night, sorted</span><h1>Find your next <em>favorite.</em></h1><p>Search a film, give it a star rating, and save the good ones for later. Your little movie corner, all in one place.</p><a class="cta" href="#films">Pick a movie&nbsp; ↗</a></div><div class="ticket" aria-label="Decorative movie ticket placeholder"><strong>Tonight looks like a movie night.</strong><span>★ 4.8</span></div></section>
+      <section id="films"><div class="section-head"><h2>People keep coming back to these</h2><a href="#">See all films →</a></div><div class="cards"><article class="card"><div class="cover">Perfect Days</div><footer><small>2023 · Drama</small><span class="stars">★★★★★</span></footer></article><article class="card"><div class="cover">The Grand Budapest Hotel</div><footer><small>2014 · Comedy</small><span class="stars">★★★★½</span></footer></article><article class="card"><div class="cover">The Truman Show</div><footer><small>1998 · Sci-fi</small><span class="stars">★★★★☆</span></footer></article><article class="card"><div class="cover">Little Women</div><footer><small>2019 · Drama</small><span class="stars">★★★★½</span></footer></article></div></section>
+      <section class="bottom" id="saved"><div><strong>Your watchlist is a plan waiting to happen.</strong><p>Save a film now; thank yourself on Friday night.</p></div><a class="cta" href="#">Open watchlist</a></section>
+      <footer style="padding:0 0 28px;color:#616475;font-size:.78rem">Direction 03 · Popcorn Club · Diary, rating, and watchlist cues reference <a href="https://letterboxd.com/" target="_blank" rel="noreferrer">Letterboxd</a> and <a href="https://help.imdb.com/article/imdb/track-movies-tv/watchlist-faq/G9PA556494DM8YBA" target="_blank" rel="noreferrer">IMDb</a>. Film artwork is placeholder styling. <a href="index.html">Back to directions</a></footer>
+    </main>
+  </body>
+</html>

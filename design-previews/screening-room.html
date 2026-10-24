@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#151310" />
+    <title>Screening Room — usePopcorn preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; --bg: #151310; --panel: #201c18; --ink: #f6efe5; --muted: #b0a79b; --line: #3b332b; --ember: #d4774f; --gold: #e2bd82; font-family: Arial, sans-serif; }
+      * { box-sizing: border-box; } body { margin: 0; background: var(--bg); color: var(--ink); }
+      a { color: inherit; } button, input { font: inherit; } .shell { width: min(1240px, calc(100% - 48px)); margin: auto; }
+      header { height: 76px; display: flex; align-items: center; gap: 30px; border-bottom: 1px solid var(--line); }
+      .brand { color: var(--gold); font: 700 1.25rem Georgia, serif; letter-spacing: -.04em; text-decoration: none; white-space: nowrap; }
+      nav { display: flex; gap: 22px; color: var(--muted); font-size: .87rem; } nav a { text-decoration: none; } nav a:first-child { color: var(--ink); }
+      .search { margin-left: auto; display: flex; width: min(340px, 38vw); padding: 10px 14px; gap: 9px; border: 1px solid #51463b; border-radius: 4px; color: var(--muted); }
+      .search input { min-width: 0; width: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; }
+      .hero { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; min-height: 440px; padding: 55px 0 48px; gap: 36px; align-items: center; }
+      .hero-copy { position: relative; z-index: 1; } .eyebrow { color: var(--ember); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; }
+      h1 { max-width: 660px; margin: 16px 0 18px; font: 400 clamp(3.5rem, 7vw, 6.6rem)/.88 "Anton", Impact, sans-serif; letter-spacing: .01em; text-transform: uppercase; }
+      .hero p { max-width: 450px; color: var(--muted); font: 1.05rem/1.65 Georgia, serif; }
+      .actions { display: flex; align-items: center; gap: 18px; margin-top: 27px; } .primary { padding: 13px 18px; border: 0; border-radius: 3px; background: var(--ember); color: #1c120e; font-weight: 700; cursor: pointer; } .text-link { color: var(--gold); text-underline-offset: 4px; }
+      .art { min-height: 330px; position: relative; overflow: hidden; background: linear-gradient(150deg, #4d3226, #181718 62%); box-shadow: 0 24px 70px #0008; }
+      .art::before { content: ''; position: absolute; width: 50%; height: 140%; top: -20%; left: 25%; transform: rotate(24deg); background: linear-gradient(90deg, transparent, #d28a5b40, #f6d1a120, transparent); }
+      .art::after { content: 'FEATURED FILM · ART PLACEHOLDER'; position: absolute; bottom: 16px; left: 18px; color: #f2d7b3; font-size: .64rem; letter-spacing: .18em; }
+      .disc { position: absolute; width: 220px; height: 220px; top: 18%; left: 34%; border: 1px solid #f0d9b744; border-radius: 50%; background: repeating-radial-gradient(circle, #6d413b 0 2px, #171516 3px 9px); box-shadow: 0 12px 50px #0008; }
+      .disc::after { content: ''; position: absolute; inset: 44%; border-radius: 50%; background: var(--gold); }
+      .shelf-head { display: flex; align-items: baseline; justify-content: space-between; margin: 28px 0 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+      h2 { margin: 0; font: 400 1.75rem "Anton", Impact, sans-serif; text-transform: uppercase; } .shelf-head a { color: var(--gold); font-size: .82rem; text-decoration: none; }
+      .shelf { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; padding-bottom: 56px; }
+      .poster { min-height: 205px; display: flex; align-items: end; padding: 12px; position: relative; overflow: hidden; background: linear-gradient(155deg, #82908b, #263733 54%, #171d1b); }
+      .poster:nth-child(2) { background: linear-gradient(155deg,#ddaf6b,#703d2b 58%,#1e1717); } .poster:nth-child(3) { background: linear-gradient(155deg,#8896b0,#41475f 55%,#1b1d28); } .poster:nth-child(4) { background: linear-gradient(155deg,#bf9b9a,#69434c 58%,#251b24); } .poster:nth-child(5) { background: linear-gradient(155deg,#c8c5a1,#59654b 55%,#20281f); }
+      .poster::before { content: ''; position: absolute; inset: 15% 14% 0; border: 1px solid #ffffff55; border-bottom: 0; border-radius: 50% 50% 0 0; opacity: .7; }
+      .poster span { position: relative; z-index: 1; font: 400 1.05rem "Anton", Impact, sans-serif; letter-spacing: .02em; text-shadow: 0 2px 8px #000; text-transform: uppercase; }
+      .note { color: var(--muted); font-size: .78rem; margin: -40px 0 38px; }
+      a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+      @media (max-width: 760px) { .shell { width: min(100% - 28px, 620px); } header { gap: 16px; } nav { display: none; } .search { width: 56%; } .hero { grid-template-columns: 1fr; padding-top: 44px; } .art { min-height: 230px; } .shelf { grid-template-columns: repeat(2, 1fr); } .poster:nth-child(n+3) { display: none; } }
+      @media (prefers-reduced-motion: no-preference) { .primary { transition: background 160ms ease, transform 160ms ease; } .primary:hover { background: #eb926d; transform: translateY(-2px); } }
+    </style>
+  </head>
+  <body>
+    <header class="shell"><a class="brand" href="index.html">usePopcorn</a><nav aria-label="Main navigation"><a href="#discover">Discover</a><a href="#watchlist">My watchlist</a></nav><label class="search">⌕ <input aria-label="Search movies" placeholder="Find your next film" /></label></header>
+    <main class="shell" id="discover">
+      <section class="hero"><div class="hero-copy"><div class="eyebrow">A film for tonight</div><h1>Make room for a little cinema.</h1><p>Find the film you’ll still be thinking about tomorrow. Search the collection, save a title, and keep your own record.</p><div class="actions"><button class="primary">Explore films</button><a class="text-link" href="#watchlist">Open watchlist ↗</a></div></div><div class="art" aria-label="Abstract featured film artwork placeholder"><span class="disc"></span></div></section>
+      <section aria-labelledby="shelf-title"><div class="shelf-head"><h2 id="shelf-title">Popular with movie people</h2><a href="#">Browse all →</a></div><div class="shelf"><div class="poster"><span>Perfect Days</span></div><div class="poster"><span>In the Mood for Love</span></div><div class="poster"><span>Moonlight</span></div><div class="poster"><span>Portrait of a Lady on Fire</span></div><div class="poster"><span>After Yang</span></div></div><p class="note">Artwork blocks are placeholders; film titles are sample content for this design direction.</p></section>
+      <section aria-labelledby="saved-title"><div class="shelf-head"><h2 id="saved-title">Your watchlist</h2><a href="#watchlist">Open list →</a></div><p class="note">Keep saved films close while you browse. Preview pattern: Netflix-style discovery rows, adapted for a personal movie search and watchlist app.</p></section>
+      <section id="watchlist" class="shelf-head"><h2>Your next screening starts here.</h2><a href="#">See saved films →</a></section>
+    </main>
+    <footer class="shell" style="padding:0 0 28px;color:#8f857a;font-size:.78rem">Direction 01 · Screening Room · Browse rows and category shortcuts reference <a href="https://help.netflix.com/en/node/47765" target="_blank" rel="noreferrer">Netflix’s browsing guidance</a>; editorial curation references <a href="https://mubi.com/en/collections" target="_blank" rel="noreferrer">MUBI collections</a>. <a href="index.html">Back to directions</a></footer>
+  </body>
+</html>
