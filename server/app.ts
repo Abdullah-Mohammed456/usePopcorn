@@ -123,9 +123,7 @@ const handleUnexpectedError: ErrorRequestHandler = (
     next(_error);
     return;
   }
-  response
-    .status(500)
-    .json({ message: "An unexpected server error occurred" });
+  response.status(500).json({ message: "An unexpected server error occurred" });
 };
 
 app.use(handleUnexpectedError);

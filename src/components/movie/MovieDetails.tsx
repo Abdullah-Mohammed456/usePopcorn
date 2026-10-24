@@ -207,7 +207,9 @@ export function MovieDetails({
                 </div>
               )}
               {movie.Plot && movie.Plot !== "N/A" && (
-                <p className="detail-plot">{movie.Plot}</p>
+                <p className="detail-plot">
+                  {movie.Plot.trimEnd().replace(/\.+$/, "")}
+                </p>
               )}
               <dl className="detail-credits">
                 {movie.Director && movie.Director !== "N/A" && (

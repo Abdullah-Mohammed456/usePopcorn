@@ -200,8 +200,7 @@ export default function App() {
 
               {query.trim().length > 0 && !validQuery && (
                 <p className="search-hint" role="status">
-                  Enter at least {MIN_SEARCH_LENGTH} characters to search
-                  titles
+                  Enter at least {MIN_SEARCH_LENGTH} characters to search titles
                 </p>
               )}
 

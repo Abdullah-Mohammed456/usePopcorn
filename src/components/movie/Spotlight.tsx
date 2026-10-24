@@ -28,7 +28,7 @@ export function Spotlight({
             <p className="eyebrow">Top match from your search</p>
             <h1 id="spotlight-title">{featured.Title}</h1>
             <p className="spotlight-description">
-              {featured.Year} · {featured.Type} Open the title for its story,
+              {featured.Year} · {featured.Type} · Open the title for its story,
               cast, and your own rating
             </p>
             <button
@@ -91,9 +91,7 @@ export function Spotlight({
           <div className="spotlight-screen" aria-hidden="true">
             <span className="screen-number">01</span>
             <span className="screen-beam" />
-            <span className="screen-caption">
-              Tonight starts with a search
-            </span>
+            <span className="screen-caption">Tonight starts with a search</span>
           </div>
         )}
       </div>
