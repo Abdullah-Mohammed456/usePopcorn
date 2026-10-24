@@ -153,7 +153,7 @@ export default function App() {
               onClick={() => setPage("collection")}
               type="button"
             >
-              My films <span className="nav-count">{watched.length}</span>
+              My list <span className="nav-count">{watched.length}</span>
             </button>
           </nav>
           <SearchBar
@@ -201,7 +201,7 @@ export default function App() {
               {query.trim().length > 0 && !validQuery && (
                 <p className="search-hint" role="status">
                   Enter at least {MIN_SEARCH_LENGTH} characters to search
-                  titles.
+                  titles
                 </p>
               )}
 
@@ -212,7 +212,7 @@ export default function App() {
                 >
                   <div className="section-heading">
                     <div>
-                      <p className="eyebrow">Movie search</p>
+                      <p className="eyebrow">Movies & series</p>
                       <h2 id="results-title">
                         Results for{" "}
                         <span className="query-label">“{query.trim()}”</span>
@@ -244,7 +244,7 @@ export default function App() {
                     </>
                   ) : (
                     <p className="empty-state">
-                      No titles found. Try another movie name or search term.
+                      No titles found Try another title or search term
                     </p>
                   )}
                 </section>
@@ -267,22 +267,22 @@ export default function App() {
                   watched={watched}
                   onDeleteMovie={handleDeleteMovie}
                   onSelectedId={handleSelectedMovie}
-                  title="My films"
+                  title="My list"
                   showSummary
                 />
               ) : (
                 <div className="collection-empty">
-                  <h1>Your collection starts with a film.</h1>
+                  <h1>Your list starts with a movie or series</h1>
                   <p>
                     Search for a title, open its details, and save your rating
-                    here.
+                    here
                   </p>
                   <button
                     className="button button-primary"
                     onClick={focusSearch}
                     type="button"
                   >
-                    Find a film
+                    Explore titles
                   </button>
                 </div>
               )}

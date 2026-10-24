@@ -8,10 +8,28 @@ export function Summary({ watched }: { watched: WatchedMovie[] }) {
 
   return (
     <dl className="summary" aria-label="Collection statistics">
-      <div><dt>Films watched</dt><dd>{watched.length}</dd></div>
-      <div><dt>Average IMDb</dt><dd>{avgImdbRating.toFixed(1)}</dd></div>
-      <div><dt>Your average</dt><dd>{avgUserRating.toFixed(1)}<span>/10</span></dd></div>
-      <div><dt>Average runtime</dt><dd>{avgRuntime.toFixed(0)}<span> min</span></dd></div>
+      <div>
+        <dt>Titles watched</dt>
+        <dd>{watched.length}</dd>
+      </div>
+      <div>
+        <dt>Average IMDb</dt>
+        <dd>{avgImdbRating.toFixed(1)}</dd>
+      </div>
+      <div>
+        <dt>Your average</dt>
+        <dd>
+          {avgUserRating.toFixed(1)}
+          <span>/10</span>
+        </dd>
+      </div>
+      <div>
+        <dt>Average runtime</dt>
+        <dd>
+          {avgRuntime.toFixed(0)}
+          <span> min</span>
+        </dd>
+      </div>
     </dl>
   );
 }

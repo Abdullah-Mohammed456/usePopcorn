@@ -37,7 +37,7 @@ export function SearchPagination({
       </button>
       {totalResults > 1000 && (
         <p className="pagination-note">
-          OMDb provides up to 1,000 results for a search.
+          OMDb provides up to 1,000 results for a search
         </p>
       )}
     </nav>

@@ -957,8 +957,7 @@ input:focus-visible {
   line-height: 1;
 }
 
-.rating-option input:checked + .star-mark,
-.rating-option:hover .star-mark {
+.rating-option.is-filled .star-mark {
   color: #f4d35e;
 }
 

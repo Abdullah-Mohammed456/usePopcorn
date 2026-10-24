@@ -26,7 +26,11 @@ export function WatchedMovies({
           <p className="eyebrow">Your collection</p>
           <Heading id="collection-title">{title}</Heading>
         </div>
-        <span className="section-marker" data-scroll-marker aria-hidden="true" />
+        <span
+          className="section-marker"
+          data-scroll-marker
+          aria-hidden="true"
+        />
       </div>
       {showSummary && <Summary watched={watched} />}
       {watched.length > 0 ? (
@@ -42,7 +46,8 @@ export function WatchedMovies({
         </ul>
       ) : (
         <p className="empty-state">
-          Your collection is empty. Search for a film and add your rating to save it here.
+          Your collection is empty Search for a movie or series and add your
+          rating to save it here
         </p>
       )}
     </section>

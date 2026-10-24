@@ -24,7 +24,9 @@ export function WatchedMovie({
         <span className="movie-card-copy">
           <span className="movie-card-meta">
             <span>{movie.year}</span>
-            <span className="type-label">Your rating {movie.userRating}/10</span>
+            <span className="type-label">
+              Your rating {movie.userRating}/10
+            </span>
           </span>
           <span className="movie-card-title">{movie.title}</span>
         </span>
@@ -33,7 +35,7 @@ export function WatchedMovie({
         className="button-remove"
         onClick={() => onDeleteMovie(movie.imdbID)}
         type="button"
-        aria-label={`Remove ${movie.title} from your films`}
+        aria-label={`Remove ${movie.title} from your list`}
       >
         Remove
       </button>

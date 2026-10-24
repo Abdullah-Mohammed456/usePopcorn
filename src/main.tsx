@@ -5,7 +5,7 @@ import App from "./App";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
-  throw new Error("The application root element is missing.");
+  throw new Error("The application root element is missing");
 }
 
 createRoot(rootElement).render(

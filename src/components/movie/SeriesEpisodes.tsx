@@ -37,7 +37,7 @@ export function SeriesEpisodes({ imdbID, totalSeasons }: SeriesEpisodesProps) {
         );
 
         if (validSeasons.length === 0) {
-          throw new Error("No episode data found.");
+          throw new Error("No episode data found");
         }
         setSeasons(validSeasons);
       } catch (requestError) {
@@ -50,7 +50,7 @@ export function SeriesEpisodes({ imdbID, totalSeasons }: SeriesEpisodesProps) {
         setError(
           requestError instanceof Error
             ? requestError.message
-            : "Episode data is unavailable.",
+            : "Episode data is unavailable",
         );
       } finally {
         if (!controller.signal.aborted) setLoading(false);

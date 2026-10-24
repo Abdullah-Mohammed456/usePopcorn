@@ -1,5 +1,6 @@
 export type OmdbFailureCode =
   | "OMDB_NOT_CONFIGURED"
+  | "OMDB_INVALID_KEY_FORMAT"
   | "OMDB_AUTHENTICATION_FAILED"
   | "OMDB_QUOTA_EXCEEDED"
   | "OMDB_TIMEOUT"
@@ -22,6 +23,9 @@ export async function fetchFromOmdb(
 ): Promise<unknown> {
   const apiKey = process.env.OMDB_API_KEY?.trim();
   if (!apiKey) throw new OmdbProviderError("OMDB_NOT_CONFIGURED");
+  if (/^https?:\/\//i.test(apiKey) || /[?&]apikey=/i.test(apiKey)) {
+    throw new OmdbProviderError("OMDB_INVALID_KEY_FORMAT");
+  }
 
   const url = new URL("https://www.omdbapi.com/");
   for (const [key, value] of Object.entries({ ...params, apikey: apiKey })) {

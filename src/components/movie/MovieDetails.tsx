@@ -48,7 +48,7 @@ export function MovieDetails({
         setMovie(null);
         const result = await getMovieDetails(selectedId, controller.signal);
         if (result.Response === "False") {
-          throw new Error(result.Error ?? "Movie details are unavailable.");
+          throw new Error(result.Error ?? "Title details are unavailable");
         }
         setMovie(result);
       } catch (requestError) {
@@ -61,7 +61,7 @@ export function MovieDetails({
         setError(
           requestError instanceof Error
             ? requestError.message
-            : "The movie service is unavailable.",
+            : "The movie service is unavailable",
         );
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -73,9 +73,11 @@ export function MovieDetails({
   }, [selectedId]);
 
   useEffect(() => {
-    document.title = movie?.Title ? `${movie.Title} · usePopcorn` : "Movie details · usePopcorn";
+    document.title = movie?.Title
+      ? `${movie.Title} · usePopcorn`
+      : "Title details · usePopcorn";
     return () => {
-      document.title = "usePopcorn — Find your next favorite film";
+      document.title = "usePopcorn — Find your next favorite story";
     };
   }, [movie?.Title]);
 
@@ -121,7 +123,7 @@ export function MovieDetails({
     onCloseMovie();
   }
 
-  const title = movie?.Title ?? "Movie details";
+  const title = movie?.Title ?? "Title details";
 
   return (
     <div
@@ -140,13 +142,15 @@ export function MovieDetails({
         ref={dialogRef}
         onKeyDown={handleDialogKeyDown}
       >
-        <h2 className="sr-only" id="dialog-title">{title}</h2>
+        <h2 className="sr-only" id="dialog-title">
+          {title}
+        </h2>
         <button
           ref={closeButtonRef}
           className="dialog-close"
           type="button"
           onClick={onCloseMovie}
-          aria-label="Close movie details"
+          aria-label="Close title details"
         >
           Close
         </button>
@@ -167,7 +171,9 @@ export function MovieDetails({
                 className="detail-poster"
               />
               <div className="detail-overview">
-                <p className="eyebrow">{movie.Type} · {movie.Year}</p>
+                <p className="eyebrow">
+                  {movie.Type} · {movie.Year}
+                </p>
                 <h2>{movie.Title}</h2>
                 <p className="detail-meta">
                   {[movie.Released, movie.Runtime, movie.Genre]
@@ -185,7 +191,7 @@ export function MovieDetails({
             <div className="detail-content">
               {inOurList ? (
                 <p className="saved-status" role="status">
-                  This title is already in your films.
+                  This title is already in your list
                 </p>
               ) : (
                 <div className="rating-panel">
@@ -196,7 +202,7 @@ export function MovieDetails({
                     type="button"
                     disabled={userRating === 0}
                   >
-                    Add to my films
+                    Add to my list
                   </button>
                 </div>
               )}
@@ -205,10 +211,16 @@ export function MovieDetails({
               )}
               <dl className="detail-credits">
                 {movie.Director && movie.Director !== "N/A" && (
-                  <div><dt>Director</dt><dd>{movie.Director}</dd></div>
+                  <div>
+                    <dt>Director</dt>
+                    <dd>{movie.Director}</dd>
+                  </div>
                 )}
                 {movie.Actors && movie.Actors !== "N/A" && (
-                  <div><dt>Cast</dt><dd>{movie.Actors}</dd></div>
+                  <div>
+                    <dt>Cast</dt>
+                    <dd>{movie.Actors}</dd>
+                  </div>
                 )}
               </dl>
               {movie.Type === "series" && (

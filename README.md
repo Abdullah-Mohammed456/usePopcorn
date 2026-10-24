@@ -1,6 +1,6 @@
 # usePopcorn
 
-**Find a film, explore the details, rate what you watch, and keep your own collection.**
+**Find a movie or series, explore the details, rate what you watch, and keep your own collection.**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/Abdullah-Mohammed456/usePopcorn/ci.yml?label=build)](https://github.com/Abdullah-Mohammed456/usePopcorn/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -11,7 +11,7 @@
 
 <!-- Screenshots: add current captures under docs/screenshots after deploying. -->
 
-| Discover                                                   | My films                                                     |
+| Discover                                                   | My list                                                      |
 | ---------------------------------------------------------- | ------------------------------------------------------------ |
 | _Screenshot placeholder — capture the Discover page here._ | _Screenshot placeholder — capture the collection page here._ |
 
@@ -52,7 +52,7 @@ The browser calls the Express API for OMDb data. The API validates request param
 
 - Node.js 24 or Node.js 22.13 and later in the 22.x line
 - npm
-- An OMDb API key for movie search
+- An OMDb API key for movie and series search
 
 ### Install and run
 
@@ -120,6 +120,8 @@ Render supplies `PORT`; the API binds to `process.env.PORT`.
 | `OMDB_TIMEOUT`                              | Retry; the provider did not respond within the timeout.                                                                                 |
 | `OMDB_CONNECTION_FAILED`                    | Investigate outbound connectivity from Render to OMDb.                                                                                  |
 | `OMDB_HTTP_ERROR` / `OMDB_INVALID_RESPONSE` | Check the upstream HTTP status in Render logs and provider availability.                                                                |
+
+If the API returns `OMDB_INVALID_KEY_FORMAT`, `OMDB_API_KEY` contains a request URL instead of the key. Set only the key value in Render.
 
 ### Vercel frontend
 

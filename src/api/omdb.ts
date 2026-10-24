@@ -4,7 +4,9 @@ import type {
   OmdbSeasonResult,
 } from "../types/omdb";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "")
+  .trim()
+  .replace(/\/+$/, "");
 
 async function request<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${API_BASE_URL}/api${path}`, {
@@ -19,7 +21,7 @@ async function request<T>(path: string, signal?: AbortSignal): Promise<T> {
       "message" in payload &&
       typeof payload.message === "string"
         ? payload.message
-        : "The movie service is unavailable. Please try again.";
+        : "The movie service is unavailable Please try again";
     throw new Error(message);
   }
 

@@ -48,7 +48,7 @@ export function useMovies(query: string, page: number) {
             controller.signal,
           );
           if (result.Response === "False") {
-            throw new Error(result.Error ?? "No movies found.");
+            throw new Error(result.Error ?? "No movies found");
           }
 
           if (controller.signal.aborted) return;
@@ -74,7 +74,7 @@ export function useMovies(query: string, page: number) {
             error:
               error instanceof Error
                 ? error.message
-                : "The movie service is unavailable.",
+                : "The movie service is unavailable",
           });
         }
       }

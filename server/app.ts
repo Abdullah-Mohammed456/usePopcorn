@@ -9,7 +9,7 @@ const app = express();
 const allowedOrigins = new Set(
   (process.env.CORS_ORIGINS ?? "")
     .split(",")
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ""))
     .filter(Boolean),
 );
 
@@ -42,7 +42,7 @@ const apiLimiter = rateLimit({
   limit: 100,
   standardHeaders: "draft-8",
   legacyHeaders: false,
-  message: { message: "Too many requests. Please try again later." },
+  message: { message: "Too many requests Please try again later" },
 });
 
 app.get("/health", (_request, response) => {
@@ -59,7 +59,7 @@ app.get("/api/movies", async (request, response) => {
   if (!parsed.success) {
     return response
       .status(400)
-      .json({ message: "A valid search query is required." });
+      .json({ message: "A valid search query is required" });
   }
 
   try {
@@ -78,7 +78,7 @@ app.get("/api/movies/:imdbID", async (request, response) => {
   if (!parsedId.success) {
     return response
       .status(400)
-      .json({ message: "A valid movie ID is required." });
+      .json({ message: "A valid movie ID is required" });
   }
 
   try {
@@ -95,7 +95,7 @@ app.get("/api/series/:imdbID/seasons/:season", async (request, response) => {
   if (!parsedId.success || !parsedSeason.success) {
     return response
       .status(400)
-      .json({ message: "A valid series season is required." });
+      .json({ message: "A valid series season is required" });
   }
 
   try {
@@ -110,7 +110,7 @@ app.get("/api/series/:imdbID/seasons/:season", async (request, response) => {
 });
 
 app.use((_request, response) => {
-  response.status(404).json({ message: "Not found." });
+  response.status(404).json({ message: "Not found" });
 });
 
 const handleUnexpectedError: ErrorRequestHandler = (
@@ -125,7 +125,7 @@ const handleUnexpectedError: ErrorRequestHandler = (
   }
   response
     .status(500)
-    .json({ message: "An unexpected server error occurred." });
+    .json({ message: "An unexpected server error occurred" });
 };
 
 app.use(handleUnexpectedError);
@@ -143,32 +143,35 @@ function sendProviderError(response: Response, error: unknown): Response {
   if (code === "OMDB_NOT_CONFIGURED") {
     return response.status(503).json({
       code,
-      message: "The movie service is not configured yet.",
+      message: "The movie service is not configured yet",
     });
   }
-  if (code === "OMDB_AUTHENTICATION_FAILED") {
+  if (
+    code === "OMDB_AUTHENTICATION_FAILED" ||
+    code === "OMDB_INVALID_KEY_FORMAT"
+  ) {
     return response.status(502).json({
       code,
       message:
-        "The movie service is not configured correctly. Please try again later.",
+        "The movie service is not configured correctly Please try again later",
     });
   }
   if (code === "OMDB_QUOTA_EXCEEDED") {
     return response.status(503).json({
       code,
       message:
-        "The movie service has reached its request limit. Please try again later.",
+        "The movie service has reached its request limit Please try again later",
     });
   }
   if (code === "OMDB_TIMEOUT") {
     return response.status(504).json({
       code,
-      message: "OMDb took too long to respond. Please try again.",
+      message: "OMDb took too long to respond Please try again",
     });
   }
   return response.status(502).json({
     code,
-    message: "The movie provider is temporarily unavailable.",
+    message: "The movie provider is temporarily unavailable",
   });
 }
 
