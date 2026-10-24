@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavBar } from "./components/layout/NavBar";
 import { NumResults } from "./components/layout/NumResults";
 import { SearchBar } from "./components/layout/SearchBar";
+import { SearchPagination } from "./components/layout/SearchPagination";
 import { Main } from "./components/layout/Main";
 import { Logo } from "./components/ui/Logo";
 import { Loading } from "./components/ui/Loading";
@@ -19,6 +20,7 @@ type Page = "discover" | "collection";
 
 export default function App() {
   const [query, setQuery] = useState("");
+  const [searchPage, setSearchPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [page, setPage] = useState<Page>("discover");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -27,7 +29,8 @@ export default function App() {
     [],
     "watched",
   );
-  const { movies, loading, error } = useMovies(query);
+  const { movies, totalResults, loading, error } = useMovies(query, searchPage);
+  const hasSearch = query.length >= MIN_SEARCH_LENGTH;
 
   function handleSelectedMovie(id: string): void {
     setSelectedId(id);
@@ -57,9 +60,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduceMotion.matches) return;
 
     let disposed = false;
@@ -79,9 +80,8 @@ export default function App() {
         if (disposed || !motionRootRef.current) return;
         gsap.registerPlugin(ScrollTrigger);
         context = gsap.context(() => {
-          const spotlight = motionRootRef.current?.querySelector(
-            ".spotlight-copy",
-          );
+          const spotlight =
+            motionRootRef.current?.querySelector(".spotlight-copy");
           if (spotlight) {
             gsap.fromTo(
               spotlight,
@@ -120,140 +120,176 @@ export default function App() {
       reduceMotion.removeEventListener("change", handleMotionPreference);
       context?.revert();
     };
-  }, [page, query.length >= MIN_SEARCH_LENGTH]);
+  }, [page, hasSearch]);
 
   const validQuery = query.trim().length >= MIN_SEARCH_LENGTH;
 
   return (
     <>
-    <div
-      className="site-shell"
-      ref={motionRootRef}
-      aria-hidden={selectedId ? true : undefined}
-      inert={selectedId !== null}
-    >
-      <NavBar>
-        <Logo />
-        <nav className="nav-links" aria-label="Main navigation">
-          <button
-            className={page === "discover" ? "nav-link is-active" : "nav-link"}
-            aria-current={page === "discover" ? "page" : undefined}
-            onClick={() => setPage("discover")}
-            type="button"
-          >
-            Discover
-          </button>
-          <button
-            className={page === "collection" ? "nav-link is-active" : "nav-link"}
-            aria-current={page === "collection" ? "page" : undefined}
-            onClick={() => setPage("collection")}
-            type="button"
-          >
-            My films <span className="nav-count">{watched.length}</span>
-          </button>
-        </nav>
-        <SearchBar
-          query={query}
-          setQuery={(nextQuery) => {
-            setPage("discover");
-            setQuery(nextQuery);
-          }}
-          inputRef={searchInputRef}
-        />
-        {page === "discover" && validQuery && (
-          <NumResults movies={movies} loading={loading} />
-        )}
-      </NavBar>
+      <div
+        className="site-shell"
+        ref={motionRootRef}
+        aria-hidden={selectedId ? true : undefined}
+        inert={selectedId !== null}
+      >
+        <NavBar>
+          <Logo />
+          <nav className="nav-links" aria-label="Main navigation">
+            <button
+              className={
+                page === "discover" ? "nav-link is-active" : "nav-link"
+              }
+              aria-current={page === "discover" ? "page" : undefined}
+              onClick={() => setPage("discover")}
+              type="button"
+            >
+              Discover
+            </button>
+            <button
+              className={
+                page === "collection" ? "nav-link is-active" : "nav-link"
+              }
+              aria-current={page === "collection" ? "page" : undefined}
+              onClick={() => setPage("collection")}
+              type="button"
+            >
+              My films <span className="nav-count">{watched.length}</span>
+            </button>
+          </nav>
+          <SearchBar
+            query={query}
+            setQuery={(nextQuery) => {
+              setPage("discover");
+              setSearchPage(1);
+              setQuery(nextQuery);
+            }}
+            inputRef={searchInputRef}
+          />
+          {page === "discover" && validQuery && (
+            <NumResults
+              totalResults={totalResults}
+              page={searchPage}
+              loading={loading}
+            />
+          )}
+        </NavBar>
 
-      <Main>
-        {page === "discover" ? (
-          <div className="page-content">
-            {!validQuery && (
-              <Spotlight
-                watched={watched}
-                onFocusSearch={focusSearch}
-                onSelectedId={handleSelectedMovie}
-              />
-            )}
+        <Main>
+          {page === "discover" ? (
+            <div className="page-content">
+              {!validQuery && (
+                <Spotlight
+                  watched={watched}
+                  onFocusSearch={focusSearch}
+                  onSelectedId={handleSelectedMovie}
+                />
+              )}
 
-            {validQuery && !loading && !error && movies[0] && (
-              <Spotlight
-                watched={watched}
-                featured={movies[0]}
-                onFocusSearch={focusSearch}
-                onSelectedId={handleSelectedMovie}
-              />
-            )}
+              {validQuery && !loading && !error && movies[0] && (
+                <Spotlight
+                  watched={watched}
+                  featured={movies[0]}
+                  onFocusSearch={focusSearch}
+                  onSelectedId={handleSelectedMovie}
+                />
+              )}
 
-            {validQuery && (loading || error || movies.length === 0) && (
-              <h1 className="sr-only">Search results for {query.trim()}</h1>
-            )}
+              {validQuery && (loading || error || movies.length === 0) && (
+                <h1 className="sr-only">Search results for {query.trim()}</h1>
+              )}
 
-            {query.trim().length > 0 && !validQuery && (
-              <p className="search-hint" role="status">
-                Enter at least {MIN_SEARCH_LENGTH} characters to search titles.
-              </p>
-            )}
+              {query.trim().length > 0 && !validQuery && (
+                <p className="search-hint" role="status">
+                  Enter at least {MIN_SEARCH_LENGTH} characters to search
+                  titles.
+                </p>
+              )}
 
-            {validQuery && (
-              <section className="content-section" aria-labelledby="results-title">
-                <div className="section-heading">
-                  <div>
-                    <p className="eyebrow">Movie search</p>
-                    <h2 id="results-title">
-                      Results for <span className="query-label">“{query.trim()}”</span>
-                    </h2>
+              {validQuery && (
+                <section
+                  className="content-section"
+                  aria-labelledby="results-title"
+                >
+                  <div className="section-heading">
+                    <div>
+                      <p className="eyebrow">Movie search</p>
+                      <h2 id="results-title">
+                        Results for{" "}
+                        <span className="query-label">“{query.trim()}”</span>
+                      </h2>
+                    </div>
+                    <span
+                      className="section-marker"
+                      data-scroll-marker
+                      aria-hidden="true"
+                    />
                   </div>
-                  <span className="section-marker" data-scroll-marker aria-hidden="true" />
-                </div>
 
-                {loading ? (
-                  <Loading />
-                ) : error ? (
-                  <ErrorMessage message={error} />
-                ) : movies.length > 0 ? (
-                  <MovieList movies={movies} onSelectedId={handleSelectedMovie} />
-                ) : (
-                  <p className="empty-state">
-                    No titles found. Try another movie name or search term.
+                  {loading ? (
+                    <Loading />
+                  ) : error ? (
+                    <ErrorMessage message={error} />
+                  ) : movies.length > 0 ? (
+                    <>
+                      <MovieList
+                        movies={movies}
+                        onSelectedId={handleSelectedMovie}
+                      />
+                      <SearchPagination
+                        page={searchPage}
+                        totalResults={totalResults}
+                        loading={loading}
+                        onPageChange={setSearchPage}
+                      />
+                    </>
+                  ) : (
+                    <p className="empty-state">
+                      No titles found. Try another movie name or search term.
+                    </p>
+                  )}
+                </section>
+              )}
+
+              {watched.length > 0 && (
+                <WatchedMovies
+                  watched={watched}
+                  onDeleteMovie={handleDeleteMovie}
+                  onSelectedId={handleSelectedMovie}
+                  title="From your collection"
+                  showSummary={false}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="page-content">
+              {watched.length > 0 ? (
+                <WatchedMovies
+                  watched={watched}
+                  onDeleteMovie={handleDeleteMovie}
+                  onSelectedId={handleSelectedMovie}
+                  title="My films"
+                  showSummary
+                />
+              ) : (
+                <div className="collection-empty">
+                  <h1>Your collection starts with a film.</h1>
+                  <p>
+                    Search for a title, open its details, and save your rating
+                    here.
                   </p>
-                )}
-              </section>
-            )}
-
-            {watched.length > 0 && (
-              <WatchedMovies
-                watched={watched}
-                onDeleteMovie={handleDeleteMovie}
-                onSelectedId={handleSelectedMovie}
-                title="From your collection"
-                showSummary={false}
-              />
-            )}
-          </div>
-        ) : (
-          <div className="page-content">
-            {watched.length > 0 ? (
-              <WatchedMovies
-                watched={watched}
-                onDeleteMovie={handleDeleteMovie}
-                onSelectedId={handleSelectedMovie}
-                title="My films"
-                showSummary
-              />
-            ) : (
-              <div className="collection-empty">
-                <h1>Your collection starts with a film.</h1>
-                <p>Search for a title, open its details, and save your rating here.</p>
-                <button className="button button-primary" onClick={focusSearch} type="button">
-                  Find a film
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </Main>
-    </div>
+                  <button
+                    className="button button-primary"
+                    onClick={focusSearch}
+                    type="button"
+                  >
+                    Find a film
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </Main>
+      </div>
       {selectedId && (
         <MovieDetails
           key={selectedId}

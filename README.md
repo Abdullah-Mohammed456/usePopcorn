@@ -11,13 +11,13 @@
 
 <!-- Screenshots: add current captures under docs/screenshots after deploying. -->
 
-| Discover | My films |
-| --- | --- |
+| Discover                                                   | My films                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------ |
 | _Screenshot placeholder — capture the Discover page here._ | _Screenshot placeholder — capture the collection page here._ |
 
 ## Features
 
-- Search movies and series through the OMDb API.
+- Search movies and series through the OMDb API, with paginated results (10 titles per page).
 - Open a title to see its plot, cast, director, rating, and series episodes.
 - Give a title a personal rating and save it to the local collection.
 - Review collection statistics and remove saved titles.
@@ -61,7 +61,7 @@ npm install
 cp .env.example .env
 ```
 
-Put your OMDb key in `.env` as `OMDB_API_KEY`. The key must not use a `VITE_` prefix. Then start both the web app and API:
+Put your OMDb key in your local `.env` as `OMDB_API_KEY`. The key must not use a `VITE_` prefix. For the deployed site, set the key once in Render; visitors do not need to create or provide their own key. Then start both the web app and API:
 
 ```bash
 npm run dev
@@ -71,25 +71,27 @@ Vite serves the app at `http://localhost:5173`; the Express API listens on `http
 
 ### Environment variables
 
-| Variable | Required | Used by | Description |
-| --- | --- | --- | --- |
-| `OMDB_API_KEY` | Yes | Express | Server-only credential for OMDb requests |
-| `CORS_ORIGINS` | Yes in production | Express | Comma-separated list of exact allowed frontend origins |
-| `VITE_API_BASE_URL` | Production | Vite app | Render API origin, with no trailing slash; leave blank locally |
-| `VITE_SITE_URL` | Yes for canonical and Open Graph URLs | Vite app | Public site origin, such as `https://your-site.vercel.app` |
+| Variable            | Required                              | Used by  | Description                                                    |
+| ------------------- | ------------------------------------- | -------- | -------------------------------------------------------------- |
+| `OMDB_API_KEY`      | Yes                                   | Express  | Server-only credential for OMDb requests                       |
+| `CORS_ORIGINS`      | Yes in production                     | Express  | Comma-separated list of exact allowed frontend origins         |
+| `VITE_API_BASE_URL` | Production                            | Vite app | Render API origin, with no trailing slash; leave blank locally |
+| `VITE_SITE_URL`     | Yes for canonical and Open Graph URLs | Vite app | Public site origin, such as `https://your-site.vercel.app`     |
 
 `.env.example` contains placeholders only. Do not commit `.env` or put server secrets in `VITE_*` variables.
 
+For production, the Express server on Render uses your single `OMDB_API_KEY` for all visitors. Add it in the Render service's **Environment** settings. Do not add `OMDB_API_KEY` to Vercel: the browser calls Render, and the key stays on the server. All visitors share the request quota of that OMDb key.
+
 ### Commands
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start Vite and the Express API together |
-| `npm run lint` | Run ESLint |
-| `npm run typecheck` | Type-check the frontend and API |
-| `npm run format` | Format supported repository files with Prettier |
-| `npm run build` | Type-check and build the frontend and API |
-| `npm start` | Start the compiled Express API |
+| Command             | Purpose                                         |
+| ------------------- | ----------------------------------------------- |
+| `npm run dev`       | Start Vite and the Express API together         |
+| `npm run lint`      | Run ESLint                                      |
+| `npm run typecheck` | Type-check the frontend and API                 |
+| `npm run format`    | Format supported repository files with Prettier |
+| `npm run build`     | Type-check and build the frontend and API       |
+| `npm start`         | Start the compiled Express API                  |
 
 There is no automated test suite configured yet.
 
@@ -115,12 +117,12 @@ Render supplies `PORT`; the API binds to `process.env.PORT`.
 
 ### Deployment values
 
-| Service | Variable | Value |
-| --- | --- | --- |
-| Vercel | `VITE_API_BASE_URL` | Render API URL, for example `https://usepopcorn-api.onrender.com` |
-| Vercel | `VITE_SITE_URL` | Public Vercel site URL |
-| Render | `OMDB_API_KEY` | Your OMDb key, set privately in the dashboard |
-| Render | `CORS_ORIGINS` | Comma-separated Vercel production and preview origins you intend to allow |
+| Service | Variable            | Value                                                                     |
+| ------- | ------------------- | ------------------------------------------------------------------------- |
+| Vercel  | `VITE_API_BASE_URL` | Render API URL, for example `https://usepopcorn-api.onrender.com`         |
+| Vercel  | `VITE_SITE_URL`     | Public Vercel site URL                                                    |
+| Render  | `OMDB_API_KEY`      | Your OMDb key, set privately in the dashboard                             |
+| Render  | `CORS_ORIGINS`      | Comma-separated Vercel production and preview origins you intend to allow |
 
 No Neon database or migrations are needed. The list is kept in browser local storage.
 
@@ -144,7 +146,6 @@ public/                 Favicon and social preview artwork
 ## Roadmap
 
 - Add automated tests for search validation, ratings, and collection persistence.
-- Add pagination for large search results.
 - Add optional import/export for the local collection.
 - Capture current desktop and mobile screenshots for this README.
 

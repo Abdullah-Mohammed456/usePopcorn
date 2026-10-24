@@ -6,23 +6,18 @@ import { ErrorMessage } from "../ui/ErrorMessage";
 
 interface SeriesEpisodesProps {
   imdbID: string;
-  totalSeasons?: string;
+  totalSeasons: string | undefined;
 }
 
-export function SeriesEpisodes({
-  imdbID,
-  totalSeasons,
-}: SeriesEpisodesProps) {
+export function SeriesEpisodes({ imdbID, totalSeasons }: SeriesEpisodesProps) {
   const [seasons, setSeasons] = useState<OmdbSeason[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const total = Number.parseInt(totalSeasons ?? "", 10);
+  const hasSeasons = Number.isInteger(total) && total > 0;
 
   useEffect(() => {
-    const total = Number.parseInt(totalSeasons ?? "", 10);
-    if (!Number.isInteger(total) || total < 1) {
-      setSeasons([]);
-      return;
-    }
+    if (!hasSeasons) return;
 
     const controller = new AbortController();
 
@@ -46,7 +41,10 @@ export function SeriesEpisodes({
         }
         setSeasons(validSeasons);
       } catch (requestError) {
-        if (requestError instanceof DOMException && requestError.name === "AbortError") {
+        if (
+          requestError instanceof DOMException &&
+          requestError.name === "AbortError"
+        ) {
           return;
         }
         setError(
@@ -61,8 +59,9 @@ export function SeriesEpisodes({
 
     void fetchAllSeasons();
     return () => controller.abort();
-  }, [imdbID, totalSeasons]);
+  }, [hasSeasons, imdbID, total, totalSeasons]);
 
+  if (!hasSeasons) return null;
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (seasons.length === 0) return null;

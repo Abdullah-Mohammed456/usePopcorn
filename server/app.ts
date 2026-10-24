@@ -18,6 +18,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const movieSearchSchema = z.object({
   query: z.string().trim().min(3).max(100),
+  page: z.coerce.number().int().min(1).max(100).default(1),
 });
 const imdbIdSchema = z.string().regex(/^tt\d{7,10}$/i);
 const seasonSchema = z.coerce.number().int().min(1).max(99);
@@ -50,13 +51,21 @@ app.get("/health", (_request, response) => {
 app.use("/api", apiLimiter);
 
 app.get("/api/movies", async (request, response) => {
-  const parsed = movieSearchSchema.safeParse({ query: request.query.query });
+  const parsed = movieSearchSchema.safeParse({
+    query: request.query.query,
+    page: request.query.page,
+  });
   if (!parsed.success) {
-    return response.status(400).json({ message: "A valid search query is required." });
+    return response
+      .status(400)
+      .json({ message: "A valid search query is required." });
   }
 
   try {
-    const result = await fetchFromOmdb({ s: parsed.data.query });
+    const result = await fetchFromOmdb({
+      s: parsed.data.query,
+      page: String(parsed.data.page),
+    });
     return response.status(200).json(result);
   } catch {
     return sendProviderError(response);
@@ -66,7 +75,9 @@ app.get("/api/movies", async (request, response) => {
 app.get("/api/movies/:imdbID", async (request, response) => {
   const parsedId = imdbIdSchema.safeParse(request.params.imdbID);
   if (!parsedId.success) {
-    return response.status(400).json({ message: "A valid movie ID is required." });
+    return response
+      .status(400)
+      .json({ message: "A valid movie ID is required." });
   }
 
   try {
@@ -81,7 +92,9 @@ app.get("/api/series/:imdbID/seasons/:season", async (request, response) => {
   const parsedId = imdbIdSchema.safeParse(request.params.imdbID);
   const parsedSeason = seasonSchema.safeParse(request.params.season);
   if (!parsedId.success || !parsedSeason.success) {
-    return response.status(400).json({ message: "A valid series season is required." });
+    return response
+      .status(400)
+      .json({ message: "A valid series season is required." });
   }
 
   try {
@@ -109,7 +122,9 @@ const handleUnexpectedError: ErrorRequestHandler = (
     next(_error);
     return;
   }
-  response.status(500).json({ message: "An unexpected server error occurred." });
+  response
+    .status(500)
+    .json({ message: "An unexpected server error occurred." });
 };
 
 app.use(handleUnexpectedError);

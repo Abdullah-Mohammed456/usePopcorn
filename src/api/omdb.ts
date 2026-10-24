@@ -7,7 +7,9 @@ import type {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function request<T>(path: string, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}/api${path}`, { signal });
+  const response = await fetch(`${API_BASE_URL}/api${path}`, {
+    ...(signal ? { signal } : {}),
+  });
   const payload: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
@@ -26,9 +28,11 @@ async function request<T>(path: string, signal?: AbortSignal): Promise<T> {
 
 export function searchMovies(
   query: string,
+  page: number,
   signal?: AbortSignal,
 ): Promise<OmdbSearchResult> {
-  return request(`/movies?query=${encodeURIComponent(query)}`, signal);
+  const params = new URLSearchParams({ query, page: String(page) });
+  return request(`/movies?${params.toString()}`, signal);
 }
 
 export function getMovieDetails(
