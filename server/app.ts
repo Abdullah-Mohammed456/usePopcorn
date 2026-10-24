@@ -3,6 +3,7 @@ import express, { type ErrorRequestHandler, type Response } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { z } from "zod";
+import { fetchFromOmdb, OmdbProviderError } from "./omdb.js";
 
 const app = express();
 const allowedOrigins = new Set(
@@ -67,8 +68,8 @@ app.get("/api/movies", async (request, response) => {
       page: String(parsed.data.page),
     });
     return response.status(200).json(result);
-  } catch {
-    return sendProviderError(response);
+  } catch (error) {
+    return sendProviderError(response, error);
   }
 });
 
@@ -83,8 +84,8 @@ app.get("/api/movies/:imdbID", async (request, response) => {
   try {
     const result = await fetchFromOmdb({ i: parsedId.data });
     return response.status(200).json(result);
-  } catch {
-    return sendProviderError(response);
+  } catch (error) {
+    return sendProviderError(response, error);
   }
 });
 
@@ -103,8 +104,8 @@ app.get("/api/series/:imdbID/seasons/:season", async (request, response) => {
       Season: String(parsedSeason.data),
     });
     return response.status(200).json(result);
-  } catch {
-    return sendProviderError(response);
+  } catch (error) {
+    return sendProviderError(response, error);
   }
 });
 
@@ -129,31 +130,44 @@ const handleUnexpectedError: ErrorRequestHandler = (
 
 app.use(handleUnexpectedError);
 
-async function fetchFromOmdb(params: Record<string, string>): Promise<unknown> {
-  const apiKey = process.env.OMDB_API_KEY?.trim();
-  if (!apiKey) {
-    throw new Error("OMDB_API_KEY is not configured.");
-  }
+function sendProviderError(response: Response, error: unknown): Response {
+  const code =
+    error instanceof OmdbProviderError ? error.code : "OMDB_UNEXPECTED_ERROR";
+  // Log only controlled fields; provider bodies and request URLs may contain keys.
+  console.error("[omdb] request failed", {
+    code,
+    upstreamStatus:
+      error instanceof OmdbProviderError ? error.upstreamStatus : undefined,
+  });
 
-  const url = new URL("https://www.omdbapi.com/");
-  for (const [key, value] of Object.entries({ ...params, apikey: apiKey })) {
-    url.searchParams.set(key, value);
-  }
-
-  const upstream = await fetch(url, { signal: AbortSignal.timeout(8_000) });
-  if (!upstream.ok) {
-    throw new Error("Movie provider request failed.");
-  }
-  return (await upstream.json()) as unknown;
-}
-
-function sendProviderError(response: Response): Response {
-  if (!process.env.OMDB_API_KEY?.trim()) {
+  if (code === "OMDB_NOT_CONFIGURED") {
     return response.status(503).json({
+      code,
       message: "The movie service is not configured yet.",
     });
   }
+  if (code === "OMDB_AUTHENTICATION_FAILED") {
+    return response.status(502).json({
+      code,
+      message:
+        "The movie service is not configured correctly. Please try again later.",
+    });
+  }
+  if (code === "OMDB_QUOTA_EXCEEDED") {
+    return response.status(503).json({
+      code,
+      message:
+        "The movie service has reached its request limit. Please try again later.",
+    });
+  }
+  if (code === "OMDB_TIMEOUT") {
+    return response.status(504).json({
+      code,
+      message: "OMDb took too long to respond. Please try again.",
+    });
+  }
   return response.status(502).json({
+    code,
     message: "The movie provider is temporarily unavailable.",
   });
 }

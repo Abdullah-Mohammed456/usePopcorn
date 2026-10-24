@@ -108,6 +108,19 @@ The frontend deploys to Vercel and the Express API deploys to Render. Configure 
 
 Render supplies `PORT`; the API binds to `process.env.PORT`.
 
+### Troubleshooting the movie API
+
+`/health` checks that Express is running; it does not check the OMDb key or upstream connection. Test `/api/movies?query=batman&page=1` to check the provider. Failures include a safe `code` in the JSON response and an `[omdb] request failed` entry in Render logs. Logs never include the key, request URL, or raw provider body.
+
+| Code                                        | Action                                                                                                                                  |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `OMDB_NOT_CONFIGURED`                       | Set `OMDB_API_KEY` in Render and redeploy.                                                                                              |
+| `OMDB_AUTHENTICATION_FAILED`                | Confirm the value is the OMDb key alone, with no URL or surrounding quotes, and follow the activation link in the OMDb email if needed. |
+| `OMDB_QUOTA_EXCEEDED`                       | Wait for the provider quota to reset or change the OMDb plan.                                                                           |
+| `OMDB_TIMEOUT`                              | Retry; the provider did not respond within the timeout.                                                                                 |
+| `OMDB_CONNECTION_FAILED`                    | Investigate outbound connectivity from Render to OMDb.                                                                                  |
+| `OMDB_HTTP_ERROR` / `OMDB_INVALID_RESPONSE` | Check the upstream HTTP status in Render logs and provider availability.                                                                |
+
 ### Vercel frontend
 
 1. Import the GitHub repository into Vercel and choose the Vite framework preset.
