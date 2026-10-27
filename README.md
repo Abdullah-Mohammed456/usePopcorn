@@ -3,17 +3,9 @@
 **Find a movie or series, explore the details, rate what you watch, and keep your own collection.**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/Abdullah-Mohammed456/usePopcorn/ci.yml?label=build)](https://github.com/Abdullah-Mohammed456/usePopcorn/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
 [![Deploy: Vercel](https://img.shields.io/badge/deploy-Vercel-black?logo=vercel)](#deployment)
-
-**Live demo:** (https://usepoopcorn.vercel.app)
-
-<!-- Screenshots: add current captures under docs/screenshots after deploying. -->
-
-| Discover                                                   | My list                                                      |
-| ---------------------------------------------------------- | ------------------------------------------------------------ |
-| _Screenshot placeholder — capture the Discover page here._ | _Screenshot placeholder — capture the collection page here._ |
 
 ## Features
 
@@ -162,7 +154,6 @@ public/                 Favicon and social preview artwork
 
 - Add automated tests for search validation, ratings, and collection persistence.
 - Add optional import/export for the local collection.
-- Capture current desktop and mobile screenshots for this README.
 
 ## Contributing
 
